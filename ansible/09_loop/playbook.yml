@@ -1,0 +1,28 @@
+# На какой группе серверов
+- hosts: webservers
+  gather_facts: no
+  tasks:
+    - name: create group
+      ansible.builtin.group:
+        name: "got"
+        state: present
+      become: yes
+    - name: create users
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        state: present
+        groups: "{{ item.groups }}"
+      loop:
+        - { name: jaime, groups: got }
+        - { name: sansa, groups: got }
+        - { name: robert, groups: got }
+      become: yes
+    - name: copy config
+      ansible.builtin.template:
+        src: files/.gitconfig.j2
+        dest: "/home/{{item.name}}/.gitconfig"
+      loop:
+        - { name: jaime, groups: got }
+        - { name: sansa, groups: got }
+        - { name: robert, groups: got }
+      become: yes
