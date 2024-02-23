@@ -1,0 +1,8 @@
+- hosts: all
+  vars:
+    epic: false
+  tasks:
+    - ansible.builtin.shell: echo "This certainly is epic!"
+      when: epic
+    - ansible.builtin.shell: echo "This certainly isn't epic!"
+      when: not epic
